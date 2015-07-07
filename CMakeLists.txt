@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(naviman)
+project(rvinci)
 
 # Qt
 find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
@@ -18,7 +18,7 @@ find_package(Boost REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES naviman
+  LIBRARIES rvinci
   CATKIN_DEPENDS rviz
 #  DEPENDS OculusSDK
 )
@@ -35,20 +35,20 @@ include_directories(include
 
 # run Qt moc generator
 qt4_wrap_cpp(MOC_FILES
-  include/${PROJECT_NAME}/naviman_display.h
+  include/${PROJECT_NAME}/rvinci_display.h
 # include/${PROJECT_NAME}/rvinci_cursor.h
  include/${PROJECT_NAME}/fixed_view_controller.h
 #  include/oculus_rviz_plugins/fixed_view_controller.h
 )
 
-add_library(naviman
-  src/naviman_display.cpp
+add_library(rvinci
+  src/rvinci_display.cpp
   src/fixed_view_controller.cpp
   src/rvinci_pose.cpp
   ${MOC_FILES}
 )
 
-target_link_libraries(naviman
+target_link_libraries(rvinci
   ${catkin_LIBRARIES}
   ${QT_LIBRARIES}
 #  ${OculusSDK_LIBRARIES}
@@ -60,7 +60,7 @@ target_link_libraries(naviman
 ## Install ##
 #############
 
-install(TARGETS naviman
+install(TARGETS rvinci
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

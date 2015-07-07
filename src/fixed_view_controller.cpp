@@ -46,11 +46,11 @@
 #include "rviz/load_resource.h"
 #include "rviz/render_panel.h"
 
-#include "naviman/fixed_view_controller.h"
+#include "rvinci/fixed_view_controller.h"
 
 using namespace rviz;
 
-namespace naviman
+namespace rvinci
 {
 
 static const Ogre::Quaternion ROBOT_TO_CAMERA_ROTATION =
@@ -115,4 +115,4 @@ void FixedViewController::zoom( float amount )
 } // end namespace rviz
 
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS( naviman::FixedViewController, rviz::ViewController )
+PLUGINLIB_EXPORT_CLASS( rvinci::FixedViewController, rviz::ViewController )

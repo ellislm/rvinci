@@ -1,13 +1,13 @@
-<library path="lib/libnaviman">
-  <class name="naviman/navmanDisplay"
-         type="naviman::navmanDisplay"
+<library path="lib/librvinci">
+  <class name="rvinci/rvinciDisplay"
+         type="rvinci::rvinciDisplay"
          base_class_type="rviz::Display">
     <description>
       Renders the rviz scene to a separate display.
     </description>
   </class>
-  <class name="naviman/FixedFrame"
-         type="naviman::FixedViewController"
+  <class name="rvinci/FixedFrame"
+         type="rvinci::FixedViewController"
          base_class_type="rviz::ViewController">
     <description>
       Renders the main rviz view from the origin of a particular tf frame.

@@ -32,9 +32,9 @@
 #include <geometry_msgs/Pose.h>
 #include <tf/LinearMath/Vector3.h>
 #include <OgreVector3.h>
-#include "naviman/rvinci_pose.h"
+#include "rvinci/rvinci_pose.h"
 
-namespace naviman
+namespace rvinci
 {
 
 /*
