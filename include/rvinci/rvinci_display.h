@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2013, Willow Garage, Inc.
  * All rights reserved.
@@ -39,6 +38,7 @@
 #include <razer_hydra/Hydra.h>
 #include "rviz/display.h"
 #include "rvinci_pose.h"
+
 namespace Ogre
 {
 class SceneNode;
@@ -98,24 +98,11 @@ private:
   void inputCallback(const razer_hydra::Hydra::ConstPtr& hydra_sub);
   void pubsubSetup();
   void publishCursorUpdate();
-
-/*
-  rviz::BoolProperty *fullscreen_property_;
-  rviz::FloatProperty *prediction_dt_property_;
-
-  rviz::StringProperty *pub_tf_frame_property_;
-
-  rviz::BoolProperty *follow_cam_property_;
-  rviz::BoolProperty *horizontal_property_;
-  rviz::TfFrameProperty *tf_frame_property_;
-  rviz::VectorProperty *offset_property_;
-
-  rviz::FloatProperty *near_clip_property_;
-*/
-  Ogre::Camera* n_cameras_[2]; 
+  
+  Ogre::Camera* camera_; 
   Ogre::SceneNode *camera_node_;
   Ogre::SceneNode *target_node_;
-  Ogre::Viewport *n_viewports[2];
+  Ogre::Viewport *viewport_;
   Ogre::RenderWindow *window_;
 
   bool right_bumper_, left_bumper_;
@@ -124,16 +111,21 @@ private:
   ros::Subscriber subscriber_camera_;
   ros::Publisher publisher_rhcursor_;
   ros::Publisher publisher_lhcursor_;
+  
   rviz::VectorProperty *property_camfocus_;
   rviz::VectorProperty *camera_Position_;
+  rviz::QuaternionProperty *property_camrot_;
+  rviz::VectorProperty *property_targposit_;
   rviz::BoolProperty *use_manual_coords_;
   rviz::VectorProperty *camera_offset_;
   rviz::VectorProperty *xyz_Scalar_;
   rviz::RenderWidget *render_widget_;
+ 
   tf::Transform camera_tf_;
   tf::TransformBroadcaster br_;
+
   rvinciPose cursor_[2];
-  rvinciPose camera_Pose_;
+  rvinciPose target_pose_;
   rvinciPose sn_Pose_;
   rvinciPose input_pose_[2];
   rvinciPose input_change_[2];

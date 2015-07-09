@@ -34,9 +34,10 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Transform.h>
-#include <tf/LinearMath/Vector3.h>
+#include <tf/transform_datatypes.h>
 #include <OgreVector3.h>
-
+#include <OgreQuaternion.h>
+#include <OgrePrerequisites.h>
 namespace rvinci
 {
 
@@ -50,7 +51,7 @@ namespace rvinci
 class rvinciPose
 {
 public:
-  rvinciPose(float x=0, float y=0, float z=0);
+  rvinciPose(float x=0, float y=0, float z=0, float ox=0, float oy=0,float oz=0,float ow=1);
   rvinciPose(const rvinciPose & rhs);
   virtual ~rvinciPose();
   Ogre::Vector3 getOgreVector() const {return Ogre::Vector3(x_,y_,z_);}
@@ -62,7 +63,11 @@ public:
                                               point.x = x_, point.y = y_, point.z = z_;
                                               return point;}
 
-  //update is meant to be fed a differential position ogre vector to allow for small, incremental
+ geometry_msgs::Quaternion getGMQuaternion() const {geometry_msgs::Quaternion rot;
+                                              rot.x = ox_, rot.y = oy_, rot.z = oz_, rot.w = ow_ ;
+                                              return rot;}
+
+ //update is meant to be fed a differential position ogre vector to allow for small, incremental
   //updates to the Pose position.
   void updatePosition(const Ogre::Vector3& dVector);
   void updatePosition(const rvinciPose& dVector);
@@ -87,16 +92,22 @@ public:
   float getX() const {return x_;}
   float getY() const {return y_;}
   float getZ() const {return z_;}
-
+  float getOX() const {return ox_;}
+  float getOY() const {return oy_;}
+  float getOZ() const {return oz_;}
+  float getOW() const {return ow_;}
+  
+  void setQuaternion(float ox, float oy, float oz, float ow);
   void setXYZ(float x, float y, float z);
+  
 
   private:
 
   Ogre::Vector3 offset_;
-  float x_;
-  float y_;
-  float z_;
-
+  float x_, ox_;
+  float y_, oy_;
+  float z_, oz_;
+  float ow_;
   };
 }
 #endif

@@ -44,17 +44,15 @@ namespace rvinci
  *position information to be outputted in those formats as well
 */
 
- rvinciPose::rvinciPose(float x, float y, float z)
-  :x_(x)
-  ,y_(y)
-  ,z_(z)
+ rvinciPose::rvinciPose(float x, float y, float z, float ox, float oy, float oz, float ow)
+  :x_(x),y_(y),z_(z)
+  ,ox_(ox),oy_(oy),oz_(oz),ow_(ow)
     {
     setOffset(getOgreVector());
     }
  rvinciPose::rvinciPose(const rvinciPose& rhs)
-  :x_(rhs.x_)
-  ,y_(rhs.y_)
-  ,z_(rhs.z_)
+  :x_(rhs.x_),y_(rhs.y_),z_(rhs.z_)
+  ,ox_(rhs.ox_),oy_(rhs.oy_), oz_(rhs.oz_),ow_(rhs.ow_)
     {
     }
  rvinciPose::~rvinciPose(){}
