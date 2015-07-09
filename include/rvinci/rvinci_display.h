@@ -102,7 +102,7 @@ private:
   Ogre::Camera* camera_; 
   Ogre::SceneNode *camera_node_;
   Ogre::SceneNode *target_node_;
-  Ogre::Viewport *viewport_;
+  Ogre::Viewport *viewport_[2];
   Ogre::RenderWindow *window_;
 
   bool right_bumper_, left_bumper_;

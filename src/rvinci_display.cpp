@@ -79,10 +79,11 @@ rvinciDisplay::rvinciDisplay()
 }
 rvinciDisplay::~rvinciDisplay()
 {
-   if (viewport_)
+  for(int i = 0; i<2; ++i)
+   if (viewport_[i])
    {
       window_->removeViewport(0);
-      viewport_ = 0;
+      viewport_[i] = 0;
     }
     if (camera_)
    {
@@ -90,7 +91,6 @@ rvinciDisplay::~rvinciDisplay()
       scene_manager_->destroyCamera(camera_);
       camera_ = 0;
    }
-  
   if (camera_node_)
   {
     camera_node_->getParentSceneNode()->removeChild(camera_node_);
@@ -150,9 +150,11 @@ void rvinciDisplay::cameraSetup()
  camera_->setNearClipDistance(0.01f);
  camera_->setFarClipDistance(10000.0f);
  camera_->setPosition(0,-3,1.5);
- viewport_ = window_->addViewport(camera_,0,0.0f,0.0f,1.0f,1.0f);//,0,0.5f,0,0.5f,1.0f);
- viewport_->setBackgroundColour(bg_color);
-
+ for(int i = 0; i<2; ++i)
+ {
+   viewport_[i] = window_->addViewport(camera_,0,0.0f,0.0f,1.0f,1.0f);//,0,0.5f,0,0.5f,1.0f);
+   viewport_[i]->setBackgroundColour(bg_color);
+ }
  //initializing camera based on typed values
  camera_node_->setPosition(0,0,0);
  camera_->lookAt(camera_node_->getOrientation() * Ogre::Vector3::UNIT_Z);

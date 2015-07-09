@@ -78,7 +78,7 @@ public:
   void setGMVector(const geometry_msgs::Vector3&);
   void setGMPoint(const geometry_msgs::Point&);
   void setGMPose(const geometry_msgs::Pose&);
-  void setGMQuaternion(const geometry_msgs::Quaternion);
+  void setGMQuaternion(const geometry_msgs::Quaternion&);
    rvinciPose & operator = (const rvinciPose&);
   rvinciPose operator + (const rvinciPose&) const;
   rvinciPose operator - (const rvinciPose&) const;
