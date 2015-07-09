@@ -104,7 +104,18 @@ namespace rvinci
     {
     x_ = x, y_ = y, z_ = z;
     }
- 
+  void rvinciPose::setGMPose(const geometry_msgs::Pose& pose)
+  {
+    setGMPoint(pose.position);
+    setGMQuaternion(pose.orientation);
+  }
+  void rvinciPose::setGMQuaternion(const geometry_msgs::Quaternion& quart)
+  {
+    ox_=quart.x;
+    oy_=quart.y;
+    oz_=quart.z;
+    ow_ = quart.w;
+  }
   rvinciPose & rvinciPose::operator = (const rvinciPose& rhs)
   {
     if(this!=&rhs)
@@ -116,35 +127,43 @@ namespace rvinci
   }
   rvinciPose rvinciPose::operator + (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_+rhs.x_),(y_+rhs.y_),(z_+rhs.z_));
+    return rvinciPose((x_+rhs.x_),(y_+rhs.y_),(z_+rhs.z_)
+           ,(ox_+rhs.ox_),(oy_+rhs.y_),(oz_+rhs.oz_),(ow_+rhs.ow_));
     }
   rvinciPose rvinciPose::operator - (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_-rhs.x_),(y_-rhs.y_),(z_-rhs.z_));
+    return rvinciPose((x_-rhs.x_),(y_-rhs.y_),(z_-rhs.z_)
+           ,(ox_-rhs.ox_),(oy_-rhs.y_),(oz_-rhs.oz_),(ow_-rhs.ow_));
     }
   rvinciPose rvinciPose::operator * (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_*rhs.x_),(y_*rhs.y_),(z_*rhs.z_));
+    return rvinciPose((x_*rhs.x_),(y_*rhs.y_),(z_*rhs.z_)
+           ,(ox_*rhs.ox_),(oy_*rhs.y_),(oz_*rhs.oz_),(ow_*rhs.ow_));
     }
   rvinciPose rvinciPose::operator / (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_/rhs.x_),(y_/rhs.y_),(z_/rhs.z_));
+    return rvinciPose((x_/rhs.x_),(y_/rhs.y_),(z_/rhs.z_)
+           ,(ox_/rhs.ox_),(oy_/rhs.y_),(oz_/rhs.oz_),(ow_/rhs.ow_));
     }
   rvinciPose rvinciPose::operator += (const rvinciPose& rhs)
     {
-    return rvinciPose((x_+=rhs.x_),(y_+=rhs.y_),(z_+=rhs.z_));
+    return rvinciPose((x_+=rhs.x_),(y_+=rhs.y_),(z_+=rhs.z_)
+           ,(ox_+=rhs.ox_),(oy_+=rhs.y_),(oz_+=rhs.oz_),(ow_+=rhs.ow_));
     }
   rvinciPose rvinciPose::operator -= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_-=rhs.x_),(y_-=rhs.y_),(z_-=rhs.z_));
+    return rvinciPose((x_-=rhs.x_),(y_-=rhs.y_),(z_-=rhs.z_)
+           ,(ox_-=rhs.ox_),(oy_-=rhs.y_),(oz_-=rhs.oz_),(ow_-=rhs.ow_));
     }
   rvinciPose rvinciPose::operator *= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_*=rhs.x_),(y_*=rhs.y_),(z_*=rhs.z_));
+    return rvinciPose((x_*=rhs.x_),(y_*=rhs.y_),(z_*=rhs.z_)
+           ,(ox_*=rhs.ox_),(oy_*=rhs.y_),(oz_*=rhs.oz_),(ow_*=rhs.ow_));
     }
   rvinciPose rvinciPose::operator /= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_/=rhs.x_),(y_/=rhs.y_),(z_/=rhs.z_));
+    return rvinciPose((x_/=rhs.x_),(y_/=rhs.y_),(z_/=rhs.z_)
+           ,(ox_/=rhs.ox_),(oy_/=rhs.y_),(oz_/=rhs.oz_),(ow_/=rhs.ow_));
     }
 
 }
