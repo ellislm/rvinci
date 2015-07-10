@@ -59,6 +59,8 @@
 #include <rviz/ogre_helpers/render_system.h>
 #include <rviz/frame_manager.h> 
 #include <interaction_cursor_msgs/InteractionCursorUpdate.h> 
+#include <rvinci_cursor_msg/rvinci_cursor.h>
+
 #include "rvinci/rvinci_display.h" 
 #define _x 0 
 #define _y 1 
@@ -170,20 +172,20 @@ void rvinciDisplay::reset(){}
 
 void rvinciDisplay::pubsubSetup()
 {
-  subscriber_camera_ = nh_.subscribe<razer_hydra::Hydra>("hydra_calib",10, &rvinciDisplay::inputCallback,this);
+  subscriber_camera_ = nh_.subscribe<rvinci_input_msg::rvinci_input>("davinci_msg",10, &rvinciDisplay::inputCallback,this);
   publisher_rhcursor_ = nh_.advertise<interaction_cursor_msgs::InteractionCursorUpdate>("rvinci_cursor_right/update",10);
   publisher_lhcursor_ = nh_.advertise<interaction_cursor_msgs::InteractionCursorUpdate>("rvinci_cursor_left/update",10);
 }
-void rvinciDisplay::inputCallback(const razer_hydra::Hydra::ConstPtr& hydra_sub)
+void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr& r_input)
 {
-  rvinciPose xyzscale;
-  xyzscale.setOgreVector(xyz_Scalar_->getVector());
 for (int i = 0; i<2; ++i)
 {
   rvinciPose old_input = input_pose_[i];
-  input_pose_[i].setGMVector(hydra_sub->paddles[i].transform.translation);
-  input_change_[i].setOgreVector(input_pose_[i].getOgreVector() - old_input.getOgreVector());
-  input_change_[i]*=xyzscale;
+  input_pose_[i].setGMPose(r_input.gripper[i].pose);
+  input_change_[i].setOgreVector((input_pose_[i].getOgreVector() - old_input.getOgreVector())
+                   *xyz_Scalar_->getVector);
+  input_change_[i]->setOgreQuaternion(input_change_[i]->getOgreQuaternion()
+                                      *old_input->getOgreQuaternion().inverse());
 }
 
 right_trigger_ = hydra_sub->paddles[1].trigger;

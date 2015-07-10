@@ -55,6 +55,7 @@ public:
   rvinciPose(const rvinciPose & rhs);
   virtual ~rvinciPose();
   Ogre::Vector3 getOgreVector() const {return Ogre::Vector3(x_,y_,z_);}
+  Ogre::Quaternion getOgreQuaternion() const {return Ogre::Quaternion(ox_,oy_,oz_,ow_);} 
   tf::Vector3 getTFVector() const {return tf::Vector3(x_,y_,z_);}
   geometry_msgs::Vector3 getGMVector() const {geometry_msgs::Vector3 vector;
                                               vector.x = x_, vector.y = y_, vector.z = z_;
@@ -74,6 +75,7 @@ public:
   void reset();
   void setOffset(const Ogre::Vector3&);
   void setOgreVector(const Ogre::Vector3&);
+  void setOgreQuaternion(const Ogre::Quaternion&);
   void setTFVector(const tf::Vector3&);
   void setGMVector(const geometry_msgs::Vector3&);
   void setGMPoint(const geometry_msgs::Point&);
@@ -100,7 +102,7 @@ public:
   
   void setQuaternion(float ox, float oy, float oz, float ow);
   void setXYZ(float x, float y, float z);
-  
+  void setXYZ(const rvinciPose&); 
 
   private:
 
