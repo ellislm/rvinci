@@ -4,7 +4,6 @@ project(rvinci_input_msg)
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_generation
-  message_runtime
   std_msgs
 )
 ## Generate messages in the 'msg' folder
@@ -16,11 +15,14 @@ find_package(catkin REQUIRED COMPONENTS
 
  generate_messages(
    DEPENDENCIES
-   geometry_msgs#   std_msgs
+   geometry_msgs
+   std_msgs
  )
 
 catkin_package(
-  CATKIN_DEPENDS geometry_msgs message_generation message_runtime std_msgs
+  CATKIN_DEPENDS
+  geometry_msgs
+  message_runtime
 )
 
 include_directories(
