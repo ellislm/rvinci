@@ -75,7 +75,10 @@ namespace rvinci
     {
     setOgreVector(getOgreVector() + offset_);
     }
-  void rvinciPose::setOffset(const Ogre::Vector3& vector){offset_ = vector;}
+  void rvinciPose::setOffset(const Ogre::Vector3& vector)
+  {
+    offset_ = vector;
+  }
   void rvinciPose::setOgreVector(const Ogre::Vector3& ovector)
     {
     x_ = ovector.x;
