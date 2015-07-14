@@ -85,6 +85,13 @@ namespace rvinci
     y_ = ovector.y;
     z_ = ovector.z;
     }
+  void rvinciPose::setOgreQuaternion(const Ogre::Quaternion& quart)
+  {
+    ow_ = quart.w;
+    ox_ = quart.x;
+    oy_ = quart.y;
+    oz_ = quart.z;
+  } 
   void rvinciPose::setTFVector(const tf::Vector3& tfvector)
     {
     x_ = tfvector.x();
@@ -130,43 +137,35 @@ namespace rvinci
   }
   rvinciPose rvinciPose::operator + (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_+rhs.x_),(y_+rhs.y_),(z_+rhs.z_)
-           ,(ox_+rhs.ox_),(oy_+rhs.y_),(oz_+rhs.oz_),(ow_+rhs.ow_));
+    return rvinciPose((x_+rhs.x_),(y_+rhs.y_),(z_+rhs.z_));
     }
   rvinciPose rvinciPose::operator - (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_-rhs.x_),(y_-rhs.y_),(z_-rhs.z_)
-           ,(ox_-rhs.ox_),(oy_-rhs.y_),(oz_-rhs.oz_),(ow_-rhs.ow_));
+    return rvinciPose((x_-rhs.x_),(y_-rhs.y_),(z_-rhs.z_));
     }
   rvinciPose rvinciPose::operator * (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_*rhs.x_),(y_*rhs.y_),(z_*rhs.z_)
-           ,(ox_*rhs.ox_),(oy_*rhs.y_),(oz_*rhs.oz_),(ow_*rhs.ow_));
+    return rvinciPose((x_*rhs.x_),(y_*rhs.y_),(z_*rhs.z_));
     }
   rvinciPose rvinciPose::operator / (const rvinciPose& rhs) const
     {
-    return rvinciPose((x_/rhs.x_),(y_/rhs.y_),(z_/rhs.z_)
-           ,(ox_/rhs.ox_),(oy_/rhs.y_),(oz_/rhs.oz_),(ow_/rhs.ow_));
+    return rvinciPose((x_/rhs.x_),(y_/rhs.y_),(z_/rhs.z_));
     }
   rvinciPose rvinciPose::operator += (const rvinciPose& rhs)
     {
-    return rvinciPose((x_+=rhs.x_),(y_+=rhs.y_),(z_+=rhs.z_)
-           ,(ox_+=rhs.ox_),(oy_+=rhs.y_),(oz_+=rhs.oz_),(ow_+=rhs.ow_));
+    return rvinciPose((x_+=rhs.x_),(y_+=rhs.y_),(z_+=rhs.z_));
     }
   rvinciPose rvinciPose::operator -= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_-=rhs.x_),(y_-=rhs.y_),(z_-=rhs.z_)
-           ,(ox_-=rhs.ox_),(oy_-=rhs.y_),(oz_-=rhs.oz_),(ow_-=rhs.ow_));
+    return rvinciPose((x_-=rhs.x_),(y_-=rhs.y_),(z_-=rhs.z_));
     }
   rvinciPose rvinciPose::operator *= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_*=rhs.x_),(y_*=rhs.y_),(z_*=rhs.z_)
-           ,(ox_*=rhs.ox_),(oy_*=rhs.y_),(oz_*=rhs.oz_),(ow_*=rhs.ow_));
+    return rvinciPose((x_*=rhs.x_),(y_*=rhs.y_),(z_*=rhs.z_));
     }
   rvinciPose rvinciPose::operator /= (const rvinciPose& rhs)
     {
-    return rvinciPose((x_/=rhs.x_),(y_/=rhs.y_),(z_/=rhs.z_)
-           ,(ox_/=rhs.ox_),(oy_/=rhs.y_),(oz_/=rhs.oz_),(ow_/=rhs.ow_));
+    return rvinciPose((x_/=rhs.x_),(y_/=rhs.y_),(z_/=rhs.z_));
     }
 
 }

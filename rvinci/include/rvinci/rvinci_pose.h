@@ -55,7 +55,7 @@ public:
   rvinciPose(const rvinciPose & rhs);
   virtual ~rvinciPose();
   Ogre::Vector3 getOgreVector() const {return Ogre::Vector3(x_,y_,z_);}
-  Ogre::Quaternion getOgreQuaternion() const {return Ogre::Quaternion(ox_,oy_,oz_,ow_);} 
+  Ogre::Quaternion getOgreQuaternion() const {return Ogre::Quaternion(ow_,ox_,oy_,oz_);} 
   tf::Vector3 getTFVector() const {return tf::Vector3(x_,y_,z_);}
   geometry_msgs::Vector3 getGMVector() const {geometry_msgs::Vector3 vector;
                                               vector.x = x_, vector.y = y_, vector.z = z_;
@@ -67,7 +67,9 @@ public:
  geometry_msgs::Quaternion getGMQuaternion() const {geometry_msgs::Quaternion rot;
                                               rot.x = ox_, rot.y = oy_, rot.z = oz_, rot.w = ow_ ;
                                               return rot;}
-
+  //initialized if offset has been configured
+// bool isInitialized() const {if(offset_) return true;
+ //                             else {return false};}
  //update is meant to be fed a differential position ogre vector to allow for small, incremental
   //updates to the Pose position.
   void updatePosition(const Ogre::Vector3& dVector);

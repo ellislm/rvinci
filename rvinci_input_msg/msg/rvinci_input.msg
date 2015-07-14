@@ -1,5 +1,5 @@
 Header header
-Gripper[2] grip
+Gripper[2] gripper
 bool camera
 bool clutch
 

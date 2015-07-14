@@ -35,7 +35,7 @@
 #include <QObject>
 #include <ros/ros.h>
 #include <OGRE/OgreRenderTargetListener.h>
-#include <razer_hydra/Hydra.h>
+#include <rvinci_input_msg/rvinci_input.h>
 #include "rviz/display.h"
 #include "rvinci_pose.h"
 
@@ -95,7 +95,7 @@ protected Q_SLOTS:
 
 private:
   void cameraSetup();
-  void inputCallback(const razer_hydra::Hydra::ConstPtr& hydra_sub);
+  void inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr& r_input);
   void pubsubSetup();
   void publishCursorUpdate();
   
@@ -104,14 +104,15 @@ private:
   Ogre::SceneNode *target_node_;
   Ogre::Viewport *viewport_[2];
   Ogre::RenderWindow *window_;
-
-  bool right_bumper_, left_bumper_;
-  float right_trigger_;
+  Ogre::Quaternion ytoz_;
+  Ogre::Vector3 initial_cvect_; 
+  bool camera_mode_, clutch_mode_;
+  int grab_[2];
   ros::NodeHandle nh_;
   ros::Subscriber subscriber_camera_;
   ros::Publisher publisher_rhcursor_;
   ros::Publisher publisher_lhcursor_;
-  
+  ros::Publisher publisher_left_hand_;
   rviz::VectorProperty *property_camfocus_;
   rviz::VectorProperty *camera_Position_;
   rviz::QuaternionProperty *property_camrot_;
@@ -120,13 +121,13 @@ private:
   rviz::VectorProperty *camera_offset_;
   rviz::VectorProperty *xyz_Scalar_;
   rviz::RenderWidget *render_widget_;
- 
+
   tf::Transform camera_tf_;
   tf::TransformBroadcaster br_;
 
   rvinciPose cursor_[2];
   rvinciPose target_pose_;
-  rvinciPose sn_Pose_;
+  rvinciPose camera_pose_;
   rvinciPose input_pose_[2];
   rvinciPose input_change_[2];
 /*

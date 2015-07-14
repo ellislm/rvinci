@@ -1,2 +1,2 @@
 geometry_msgs/Pose pose
-bool grab
+uint8 grab
