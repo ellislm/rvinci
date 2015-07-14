@@ -63,6 +63,9 @@
   <build_depend>roscpp</build_depend>
   <run_depend>roscpp</run_depend>
 
+  <build_depend>rvinci_input_msg</build_depend>
+  <run_depend>rvinci_input_msg</run_depend>
+
   <export>
       <rviz plugin="${prefix}/plugin_description.xml"/>
   </export>

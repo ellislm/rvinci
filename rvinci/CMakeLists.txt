@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rviz
   roscpp
   tf
+  rvinci_input_msg
 )
 
 # Boost
