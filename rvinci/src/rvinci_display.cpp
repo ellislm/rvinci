@@ -78,7 +78,8 @@ rvinciDisplay::rvinciDisplay()
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(ROS_PACKAGE_NAME);
 //  connect( QApplication::desktop(), SIGNAL( screenCountChanged ( int ) ), this, SLOT( onScreenCountChanged(int)) );
   camera_=0;
-  ytoz_ = Ogre::Quaternion(sqrt(0.5),-1*sqrt(0.5),0,0);
+  ytoz_ = Ogre::Quaternion(sqrt(0.5),sqrt(0.5),0,0);
+  ytoz_ = ytoz_ * Ogre::Quaternion(sqrt(0.5),0,sqrt(0.5),0);
 }
 rvinciDisplay::~rvinciDisplay()
 {
@@ -119,7 +120,7 @@ void rvinciDisplay::onInitialize()
                                               "Focus Point of Camera",this);
   camera_offset_ = new rviz::VectorProperty("SN Position",Ogre::Vector3(0,0,0),
                           "Position of scene node to world base frame",this);
-  xyz_Scalar_ = new rviz::VectorProperty("X,Y,Z Scalars",Ogre::Vector3(3,3,3),
+  xyz_Scalar_ = new rviz::VectorProperty("X,Y,Z Scalars",Ogre::Vector3(5,5,5),
                           "Scalars for X, Y, and Z of controller motion input",this);
   property_targposit_= new rviz::VectorProperty("Target Node Position",Ogre::Vector3(0,0,0),
                           "Position of scene node to world base frame",this);
@@ -160,8 +161,8 @@ void rvinciDisplay::cameraSetup()
    viewport_[i] = window_->addViewport(camera_,i,0.5f*i,0.0f,0.5f,1.0f);//,0,0.5f,0,0.5f,1.0f);
    viewport_[i]->setBackgroundColour(bg_color);
  }
- //General cursor offset for startup
- cursor_[0].setXYZ(-0.5,0,0), cursor_[1].setXYZ(0.5,0.0,0);
+ //Initial cursor offset for startup.
+ cursor_[0].setXYZ(-0.5,1,0), cursor_[1].setXYZ(0.5,1.0,0);
 }
 void rvinciDisplay::update(float wall_dt, float ros_dt)
 {
@@ -182,14 +183,16 @@ void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr
 {
   camera_mode_ = r_input->camera;
   clutch_mode_ = r_input->clutch;
-      //Ogre::Quaternion ytoz_ = Ogre::Quaternion(pi()/2, Ogre::Vector3(0,0,1))*Ogre::Quaternion(pi()/2,Ogre::Vector3(1,0,0));
+  Ogre::Vector3 coffset(0.3,0,0);
+  coffset*=xyz_Scalar_->getVector();//Ogre::Quaternion ytoz_ = Ogre::Quaternion(pi()/2, Ogre::Vector3(0,0,1))*Ogre::Quaternion(pi()/2,Ogre::Vector3(1,0,0));
   if(!clutch_mode_)
   {
-    rvinciPose right_old_ = input_pose_[1];
     for (int i = 0; i<2; ++i)
     {
       rvinciPose old_input = input_pose_[i];
       input_pose_[i].setGMPose(r_input->gripper[i].pose);
+      input_pose_[i].setOgreVector(input_pose_[i].getOgreVector()*xyz_Scalar_->getVector());
+      input_pose_[i].setOgreQuaternion(input_pose_[i].getOgreQuaternion()*ytoz_);
       input_change_[i].setOgreVector(camera_->getRealOrientation()*(input_pose_[i].getOgreVector() - old_input.getOgreVector()));
       input_change_[i].setOgreQuaternion(input_pose_[i].getOgreQuaternion()
                                           *old_input.getOgreQuaternion().Inverse());
@@ -199,11 +202,11 @@ void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr
     {
       for (int i = 0; i<2; ++i)
       {
-        cursor_[i].updatePosition(input_change_[i].getOgreVector() * xyz_Scalar_->getVector());
+        cursor_[i].updatePosition(input_change_[i].getOgreVector());
         cursor_[i].setOgreQuaternion(cursor_[i].getOgreQuaternion()*input_change_[i].getOgreQuaternion());
       }
         publishCursorUpdate();
-        initial_cvect_ = (input_pose_[0].getOgreVector() - input_pose_[1].getOgreVector() - Ogre::Vector3(0.3,0,0));
+        initial_cvect_ = (input_pose_[0].getOgreVector() - input_pose_[1].getOgreVector() - coffset);
         initial_cvect_.normalise();
     }
     else
@@ -217,6 +220,7 @@ void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr
     for(int i = 0; i<2; ++i)
     {
       input_pose_[i].setGMPose(r_input->gripper[i].pose);
+      input_pose_[i].setOgreVector(input_pose_[i].getOgreVector()*xyz_Scalar_->getVector());
     }
   }
 }
@@ -253,20 +257,21 @@ void rvinciDisplay::updateCamera()
     }
   if(!use_manual_coords_->getBool() && camera_mode_)
     {
-     // Ogre::Quaternion ytoz_(sqrt(0.5),-1*sqrt(0.5),0,0);
-      Ogre::Vector3 newvect =(input_pose_[0].getOgreVector() - input_pose_[1].getOgreVector() - Ogre::Vector3(0.4,0,0));
+      Ogre::Vector3 coffset(0.3,0,0);      // Ogre::Quaternion ytoz_(sqrt(0.5),-1*sqrt(0.5),0,0);
+      coffset*=xyz_Scalar_->getVector();
+      Ogre::Vector3 newvect =(input_pose_[0].getOgreVector() - input_pose_[1].getOgreVector() - coffset);
       newvect.normalise();
       Ogre::Quaternion camrot  = initial_cvect_.getRotationTo(newvect);
       property_camrot_->setQuaternion(camera_node_->getOrientation()*camrot);
-      camera_pose_.setOgreVector(camera_pose_.getOgreVector() - ((input_change_[_RIGHT].getOgreVector()+ input_change_[0].getOgreVector())*Ogre::Vector3(2,2,2)));
-      camera_node_->setOrientation(camera_node_->getOrientation()*camrot);
+      camera_pose_.setOgreVector(camera_pose_.getOgreVector() - ((input_change_[_RIGHT].getOgreVector()+ input_change_[0].getOgreVector())));
+      camera_node_->setOrientation(camera_node_->getOrientation()*camrot.Inverse());
       camera_node_->setPosition(camera_pose_.getOgreVector());
-      //camera_->lookAt(camera_node_->getPosition());
-    camera_tf_.setOrigin(target_pose_.getTFVector());
-    camera_tf_.setRotation(tf::Quaternion(0.0,0.0,0.0,1));
+      //camera_->lookAt(camera_node_->getPosition()); //this little line was a bastard
+   // camera_tf_.setOrigin(target_pose_.getTFVector());
+  //  camera_tf_.setRotation(tf::Quaternion(0.0,0.0,0.0,1));
     initial_cvect_ = newvect;
   }
-br_.sendTransform(tf::StampedTransform(camera_tf_, ros::Time::now(), "base_link","/camera_frame"));
+//br_.sendTransform(tf::StampedTransform(camera_tf_, ros::Time::now(), "base_link","/camera_frame"));
 }
 //Overrides from OgreTargetListener
 void rvinciDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
