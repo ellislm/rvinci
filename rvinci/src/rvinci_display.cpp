@@ -78,8 +78,6 @@ rvinciDisplay::rvinciDisplay()
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(ROS_PACKAGE_NAME);
 //  connect( QApplication::desktop(), SIGNAL( screenCountChanged ( int ) ), this, SLOT( onScreenCountChanged(int)) );
   camera_=0;
-  ytoz_ = Ogre::Quaternion(sqrt(0.5),sqrt(0.5),0,0);
-  ytoz_ = ytoz_ * Ogre::Quaternion(sqrt(0.5),0,sqrt(0.5),0);
 }
 rvinciDisplay::~rvinciDisplay()
 {
@@ -183,6 +181,8 @@ void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr
 {
   camera_mode_ = r_input->camera;
   clutch_mode_ = r_input->clutch;
+  ytoz_ = Ogre::Quaternion(sqrt(0.5),sqrt(0.5),0,0);
+  ytoz_ = ytoz_ * Ogre::Quaternion(sqrt(0.5),0,sqrt(0.5),0);
   Ogre::Vector3 coffset(0.3,0,0);
   coffset*=xyz_Scalar_->getVector();//Ogre::Quaternion ytoz_ = Ogre::Quaternion(pi()/2, Ogre::Vector3(0,0,1))*Ogre::Quaternion(pi()/2,Ogre::Vector3(1,0,0));
   if(!clutch_mode_)
@@ -246,14 +246,12 @@ void rvinciDisplay::publishCursorUpdate()
 }
 void rvinciDisplay::updateCamera()
 {
-  
   if(use_manual_coords_->getBool())
    {
      camera_pose_.setOgreVector(camera_offset_->getVector()); 
      camera_->setPosition(camera_pose_.getOgreVector());
-  property_camrot_->setQuaternion(camera_->getRealOrientation());
-  camera_->lookAt(ytoz_*property_camfocus_->getVector());
-  //   camera_->setFixedYawAxis(true, camera_node_->getOrientation() * Ogre::Vector3::UNIT_Z);
+     property_camrot_->setQuaternion(camera_->getRealOrientation());
+     camera_->lookAt(ytoz_*property_camfocus_->getVector());
     }
   if(!use_manual_coords_->getBool() && camera_mode_)
     {
@@ -266,12 +264,8 @@ void rvinciDisplay::updateCamera()
       camera_pose_.setOgreVector(camera_pose_.getOgreVector() - ((input_change_[_RIGHT].getOgreVector()+ input_change_[0].getOgreVector())));
       camera_node_->setOrientation(camera_node_->getOrientation()*camrot.Inverse());
       camera_node_->setPosition(camera_pose_.getOgreVector());
-      //camera_->lookAt(camera_node_->getPosition()); //this little line was a bastard
-   // camera_tf_.setOrigin(target_pose_.getTFVector());
-  //  camera_tf_.setRotation(tf::Quaternion(0.0,0.0,0.0,1));
-    initial_cvect_ = newvect;
-  }
-//br_.sendTransform(tf::StampedTransform(camera_tf_, ros::Time::now(), "base_link","/camera_frame"));
+      initial_cvect_ = newvect;
+    }
 }
 //Overrides from OgreTargetListener
 void rvinciDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
