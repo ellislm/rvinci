@@ -27,17 +27,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NAVIMAN_DISPLAY_H
-#define NAVIMAN_DISPLAY_H
+#ifndef RVINCI_DISPLAY_H
+#define RVINCI_DISPLAY_H
 
-#include <tf/transform_broadcaster.h>
+#include "rviz/display.h"
 
 #include <QObject>
 #include <ros/ros.h>
 #include <OGRE/OgreRenderTargetListener.h>
+#include <OGRE/OgrePrerequisites.h>
+#include <OgreVector3.h>
+#include <OgreQuaternion.h>
+
 #include <rvinci_input_msg/rvinci_input.h>
-#include "rviz/display.h"
-#include "rvinci_pose.h"
 
 namespace Ogre
 {
@@ -49,13 +51,11 @@ class Viewport;
 
 namespace rviz
 {
-//class BoolProperty;
-//class StringProperty;
+class BoolProperty;
 class RenderWidget;
-//class FloatProperty;
 class VectorProperty;
-//class TfFrameProperty;
 class QuaternionProperty;
+class RosTopicProperty;
 }
 
 namespace rvinci
@@ -81,63 +81,58 @@ protected:
 
   virtual void onEnable();
   virtual void onDisable();
-  void updateCamera();
-
+  void cameraUpdate();
 protected Q_SLOTS:
-/*
-  void onFullScreenChanged();
-  void onPredictionDtChanged();
-  void onPubTfChanged();
-  void onFollowCamChanged();
-
-  void onScreenCountChanged( int newCount );
-*/
-
+  virtual void cameraReset();
+  virtual void pubsubSetup();
 private:
   void cameraSetup();
   void inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr& r_input);
-  void pubsubSetup();
-  void publishCursorUpdate();
-  
-  Ogre::Camera* camera_; 
+  void publishCursorUpdate(int grab[2]);
+  int getaGrip(bool, int);
+  bool camera_mode_, clutch_mode_;
+  bool prev_grab_[2];
+
+  Ogre::Camera* camera_;
   Ogre::SceneNode *camera_node_;
   Ogre::SceneNode *target_node_;
   Ogre::Viewport *viewport_[2];
   Ogre::RenderWindow *window_;
-  Ogre::Quaternion ytoz_;
-  Ogre::Vector3 initial_cvect_; 
-  bool camera_mode_, clutch_mode_;
-  int grab_[2];
+
+  Ogre::Vector3 initial_cvect_;
+  Ogre::Vector3 camera_offset_;
+  Ogre::Vector3 camera_pos_;
+  Ogre::Quaternion camera_ori_;
+  Ogre::Vector3 input_pos_[2];
+  Ogre::Vector3 input_change_[2];
+
   ros::NodeHandle nh_;
   ros::Subscriber subscriber_camera_;
   ros::Publisher publisher_rhcursor_;
   ros::Publisher publisher_lhcursor_;
   ros::Publisher publisher_left_hand_;
-  rviz::VectorProperty *property_camfocus_;
-  rviz::VectorProperty *camera_Position_;
+
+  rviz::VectorProperty *prop_cam_focus_;
   rviz::QuaternionProperty *property_camrot_;
-  rviz::VectorProperty *property_targposit_;
-  rviz::BoolProperty *use_manual_coords_;
-  rviz::VectorProperty *camera_offset_;
-  rviz::VectorProperty *xyz_Scalar_;
+  rviz::BoolProperty *prop_manual_coords_;
+  rviz::VectorProperty *prop_camera_posit_;
+  rviz::VectorProperty *prop_input_scalar_;
+  rviz::RosTopicProperty *prop_ros_topic_;
+  rviz::BoolProperty *prop_cam_reset_;
   rviz::RenderWidget *render_widget_;
 
   tf::Transform camera_tf_;
   tf::TransformBroadcaster br_;
 
-  rvinciPose cursor_[2];
-  rvinciPose target_pose_;
-  rvinciPose camera_pose_;
-  rvinciPose input_pose_[2];
-  rvinciPose input_change_[2];
-/*
+  geometry_msgs::Pose cursor_[2];
+ /*
 #ifndef Q_MOC_RUN
   tf::TransformBroadcaster tf_pub_;
   boost::shared_ptr<Oculus> oculus_;
 #endif*/
 };
 
-} // namespace rviz
+} // namespace rvinci
 
 #endif
 
