@@ -130,13 +130,14 @@ private:
   bool camera_mode_, clutch_mode_;
   bool prev_grab_[2];
 
-  Ogre::Camera* camera_;
+  Ogre::Camera* camera_[2];
   Ogre::SceneNode *camera_node_;
   Ogre::SceneNode *target_node_;
   Ogre::Viewport *viewport_[2];
   Ogre::RenderWindow *window_;
 
   Ogre::Vector3 initial_cvect_;
+  Ogre::Vector3 camera_ipd_;
   Ogre::Vector3 camera_offset_;
   Ogre::Vector3 cursor_offset_[2];
   Ogre::Vector3 camera_pos_;
@@ -145,7 +146,7 @@ private:
   Ogre::Vector3 input_change_[2];
 
   ros::NodeHandle nh_;
-  ros::Subscriber subscriber_camera_;
+  ros::Subscriber subscriber_input_;
   ros::Publisher publisher_rhcursor_;
   ros::Publisher publisher_lhcursor_;
   ros::Publisher pub_robot_state_[2];
