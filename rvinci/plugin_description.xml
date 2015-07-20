@@ -6,11 +6,4 @@
       Renders the rviz scene to a separate display.
     </description>
   </class>
-  <class name="rvinci/FixedFrame"
-         type="rvinci::FixedViewController"
-         base_class_type="rviz::ViewController">
-    <description>
-      Renders the main rviz view from the origin of a particular tf frame.
-    </description>
-  </class>
 </library>
