@@ -1,0 +1,10 @@
+<launch>
+
+  <include file="$(find dvrk_robot)/launch/test_dvrk_full.launch"/>
+
+  <node name="basic_controls" type="basic_controls" pkg="interactive_marker_tutorials" />
+  <node name="da_to_rvinci" type="da_to_rvinci" pkg="da_to_rvinci" />
+
+  <node name="rviz" pkg="rviz" type="rviz"
+         args="-d $(find rvinci)/launch/rvinci.rviz" />
+</launch>
