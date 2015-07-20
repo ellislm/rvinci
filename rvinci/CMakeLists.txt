@@ -10,7 +10,6 @@ add_definitions(-DQT_NO_KEYWORDS -fPIC)
 find_package(catkin REQUIRED COMPONENTS 
   rviz
   roscpp
-  tf
   rvinci_input_msg
 )
 
@@ -21,7 +20,6 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rvinci
   CATKIN_DEPENDS rviz
-#  DEPENDS OculusSDK
 )
 
 find_package(PkgConfig)
@@ -37,22 +35,17 @@ include_directories(include
 # run Qt moc generator
 qt4_wrap_cpp(MOC_FILES
   include/${PROJECT_NAME}/rvinci_display.h
-# include/${PROJECT_NAME}/rvinci_cursor.h
- include/${PROJECT_NAME}/fixed_view_controller.h
-#  include/oculus_rviz_plugins/fixed_view_controller.h
 )
 
 add_library(rvinci
   src/rvinci_display.cpp
-  src/fixed_view_controller.cpp
-  src/rvinci_pose.cpp
+  #  src/rvinci_pose.cpp
   ${MOC_FILES}
 )
 
 target_link_libraries(rvinci
   ${catkin_LIBRARIES}
   ${QT_LIBRARIES}
-#  ${OculusSDK_LIBRARIES}
   ${BOOST_LIBRARIES}
 )
 
