@@ -87,8 +87,8 @@ rvinciDisplay::rvinciDisplay()
                                            "Reset camera and cursor position", this, SLOT (cameraReset()));
   prop_gravity_comp_ = new rviz::BoolProperty("Release da Vinci",false,
                                            "Put da Vinci in Gravity Compensation mode", this, SLOT (gravityCompensation()));
-  prop_manual_coords_ = new rviz::BoolProperty("Use typed coordinates",false,
-                                               "Camera movement controlled by typed coordinates",this);
+//  prop_manual_coords_ = new rviz::BoolProperty("Use typed coordinates",false,
+//                                               "Camera movement controlled by typed coordinates",this);
   prop_cam_focus_ = new rviz::VectorProperty("Camera Focus",Ogre::Vector3(0,0,0),
                                              "Focus Point of Camera",this);
   prop_camera_posit_ = new rviz::VectorProperty("Camera Position",camera_offset_,
@@ -108,7 +108,7 @@ rvinciDisplay::~rvinciDisplay()
       window_->removeViewport(0);
       viewport_[i] = 0;
     }
-  
+
   if (camera_[i])
    {
       camera_[i]->getParentSceneNode()->detachObject(camera_[i]);
@@ -124,7 +124,7 @@ rvinciDisplay::~rvinciDisplay()
   }
   window_ = 0;
   delete render_widget_;
-  delete prop_manual_coords_;
+//  delete prop_manual_coords_;
   delete prop_cam_focus_;
   delete prop_camera_posit_;
   delete prop_input_scalar_;
@@ -218,7 +218,7 @@ void rvinciDisplay::inputCallback(const rvinci_input_msg::rvinci_input::ConstPtr
       }
         publishCursorUpdate(grab);
         /*
-         * in_vect is constantly calculated, to set original vector between grippers when
+         * inital_vect is constantly calculated, to set origin vector between grippers when
          * camera mode is triggered.
          */
         initial_cvect_ = (input_pos_[_LEFT] - input_pos_[_RIGHT]);
@@ -273,11 +273,10 @@ void rvinciDisplay::publishCursorUpdate(int grab[2])
   rhcursor.pose.header.frame_id = frame;
   rhcursor.pose.header.stamp = ros::Time::now();
   rhcursor.pose.pose = cursor_[_RIGHT];
-//  rhcursor.pose.pose.orientation = cursori[_RIGHT];
   rhcursor.button_state = grab[_RIGHT];
+
   lhcursor.pose.header.frame_id = frame;
   lhcursor.pose.header.stamp = ros::Time::now();
-//  lhcursor.pose.pose.orientation = cursori[_LEFT];
   lhcursor.pose.pose = cursor_[_LEFT];
   lhcursor.button_state = grab[_LEFT];
 
@@ -343,7 +342,10 @@ void rvinciDisplay::cameraReset()
 }
 void rvinciDisplay::cameraUpdate()
 {
-  if(prop_manual_coords_->getBool())
+/*Manual camera control doesn't work perfectly, but is deemed unnecessary.
+ Code left for future use, if desired.
+
+    if(prop_manual_coords_->getBool())
    {
      camera_pos_ = Ogre::Vector3(prop_camera_posit_->getVector());
      camera_node_->setPosition(camera_pos_ - camera_offset_);
@@ -351,8 +353,9 @@ void rvinciDisplay::cameraUpdate()
      camera_[_LEFT]->lookAt(prop_cam_focus_->getVector());
      camera_[_RIGHT]->lookAt(prop_cam_focus_->getVector());
     }
-  if(!prop_manual_coords_->getBool() && camera_mode_)
-    {
+  if(!prop_manual_coords_->getBool() && camera_mode_)  {
+
+ */
       Ogre::Vector3 newvect = input_pos_[_LEFT] - input_pos_[_RIGHT];
       newvect.normalise();
       Ogre::Quaternion camrot  = initial_cvect_.getRotationTo(newvect);
@@ -360,12 +363,12 @@ void rvinciDisplay::cameraUpdate()
       camera_pos_ = Ogre::Vector3(camera_pos_ - ((input_change_[_RIGHT] + input_change_[_LEFT])));
       camera_node_->setOrientation(camera_node_->getOrientation()*camrot.Inverse());
       camera_node_->setPosition(camera_pos_);
+
       initial_cvect_ = newvect;
 
-      property_camrot_->setQuaternion(camera_node_->getOrientation()*camrot);
+      property_camrot_->setQuaternion(camera_[_LEFT]->getRealOrientation());
       prop_camera_posit_->setVector(camera_pos_ + property_camrot_->getQuaternion()*camera_[_LEFT]->getPosition());
       prop_cam_focus_->setVector(camera_node_->getPosition());
-    }
 }
 void rvinciDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
