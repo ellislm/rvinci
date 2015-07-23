@@ -33,7 +33,7 @@ davinci_mtm::davinci_mtm()
   right_grip_sub_ = n.subscribe<std_msgs::Bool>("/dvrk_mtmr/gripper_closed_event",10,boost::bind(&davinci_mtm::gripCallback,this,_1,1));
   left_pose_sub_ = n.subscribe<geometry_msgs::Pose>("/dvrk_mtml/position_cartesian_current",10,boost::bind(&davinci_mtm::getPose,this,_1,0));
   right_pose_sub_ = n.subscribe<geometry_msgs::Pose>("/dvrk_mtmr/position_cartesian_current",10,boost::bind(&davinci_mtm::getPose,this,_1,1));
-  rvinci_pub_ = n.advertise<rvinci_input_msg::rvinci_input>("/davinci_msg",10);
+  rvinci_pub_ = n.advertise<rvinci_input_msg::rvinci_input>("/rvinci_input_update",10);
 
   camera_sub_ = n.subscribe<std_msgs::Bool>("/dvrk_footpedal/camera",10,&davinci_mtm::cameraCallback,this);
   clutch_sub_ = n.subscribe<std_msgs::Bool>("/dvrk_footpedal/clutch",10,&davinci_mtm::clutchCallback,this);
@@ -62,9 +62,9 @@ void davinci_mtm::clutchCallback(const std_msgs::Bool::ConstPtr& cltch)
   rvmsg_.clutch = cltch->data;
 }
 int main(int argc, char** argv){
-ros::init(argc, argv, "davinci_to_rvinci");
+ros::init(argc, argv, "dvrk_to_rvinci");
 davinci_mtm mtmlr;
-ros::Rate r(100);
+ros::Rate r(200);
 
 while(ros::ok())
 {

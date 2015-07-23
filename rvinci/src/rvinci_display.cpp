@@ -129,7 +129,6 @@ rvinciDisplay::~rvinciDisplay()
   delete prop_camera_posit_;
   delete prop_input_scalar_;
 }
-
 void rvinciDisplay::onInitialize()
 {
   render_widget_ = new rviz::RenderWidget(rviz::RenderSystem::get());
@@ -368,7 +367,6 @@ void rvinciDisplay::cameraUpdate()
       prop_cam_focus_->setVector(camera_node_->getPosition());
     }
 }
-//Overrides from OgreTargetListener
 void rvinciDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
 cameraUpdate();

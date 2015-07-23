@@ -77,7 +77,7 @@ public:
    * is spawned and the ROS subscriber and publisher setup member is called.
    */
   rvinciDisplay();
-  //!Deconstructor
+  //!Destructor
   virtual ~rvinciDisplay();
 
 //  virtual void reset();
@@ -114,6 +114,7 @@ protected Q_SLOTS:
   virtual void cameraReset();
   //!Sets up ROS subscribers and publishers
   virtual void pubsubSetup();
+  //!Toggle for DVRK Gravity Compensation state
   virtual void gravityCompensation();
 private:
   //!Creates viewports and cameras.
