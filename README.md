@@ -1,5 +1,5 @@
 # RVinci
-#Rvinci is an interface dvrk with RViz. It creates a stereoscopic render window for the da Vinci viewer,
+Rvinci is an interface dvrk with RViz. It creates a stereoscopic render window for the da Vinci viewer,
 provides camera control within the RViz environment, and provides functionality for 3D cursors to manipulate
 objects within the world.
 
