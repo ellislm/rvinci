@@ -352,10 +352,11 @@ void rvinciDisplay::cameraUpdate()
      property_camrot_->setQuaternion(camera_[_LEFT]->getRealOrientation());
      camera_[_LEFT]->lookAt(prop_cam_focus_->getVector());
      camera_[_RIGHT]->lookAt(prop_cam_focus_->getVector());
-    }
-  if(!prop_manual_coords_->getBool() && camera_mode_)  {
+    }*/
+  if(camera_mode_)
+  {
 
- */
+ 
       Ogre::Vector3 newvect = input_pos_[_LEFT] - input_pos_[_RIGHT];
       newvect.normalise();
       Ogre::Quaternion camrot  = initial_cvect_.getRotationTo(newvect);
@@ -369,6 +370,7 @@ void rvinciDisplay::cameraUpdate()
       property_camrot_->setQuaternion(camera_[_LEFT]->getRealOrientation());
       prop_camera_posit_->setVector(camera_pos_ + property_camrot_->getQuaternion()*camera_[_LEFT]->getPosition());
       prop_cam_focus_->setVector(camera_node_->getPosition());
+}
 }
 void rvinciDisplay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
